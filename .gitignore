@@ -1,0 +1,31 @@
+# Dependências
+node_modules/
+
+# Variáveis de ambiente (nunca commitar)
+.env
+.env.test
+.env.bak
+.env.local
+.env.*.local
+
+# Arquivos acidentais / lixo
+eed
+ql*
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Relatório de cobertura (gerado por npm run test:coverage)
+coverage/
+
+# Ambiente virtual Python (usado localmente, não faz parte do projeto Node)
+.venv/
