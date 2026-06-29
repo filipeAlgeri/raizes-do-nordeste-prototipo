@@ -1,0 +1,29 @@
+sequenceDiagram
+    actor Cliente
+    participant API as API (POST /pedidos)
+    participant DB as Banco de Dados
+    participant Mock as Gateway de Pagamento (mock)
+    actor Cozinha
+
+    Cliente->>API: POST /pedidos (itens, canalPedido, formaPagamento)
+    API->>DB: valida unidade, produtos e estoque
+    alt estoque insuficiente
+        DB-->>API: estoqueAtual < quantidade
+        API-->>Cliente: 409 ESTOQUE_INSUFICIENTE
+    else estoque OK
+        API->>DB: $transaction: decrementa estoque + cria Pedido (AGUARDANDO_PAGAMENTO) + ItemPedido
+        DB-->>API: pedido criado
+        API->>Mock: processarPagamentoMock(valor, forma)
+        alt pagamento aprovado
+            Mock-->>API: status APROVADO + transacaoId
+            API->>DB: cria Pagamento + atualiza Pedido para EM_PREPARO
+            API-->>Cliente: 201 Created (status EM_PREPARO)
+            Cozinha->>API: PATCH /pedidos/:id/status (PRONTO)
+            API->>DB: valida transição + atualiza status
+            API-->>Cozinha: 200 OK (status PRONTO)
+        else pagamento recusado
+            Mock-->>API: status RECUSADO
+            API->>DB: cria Pagamento + reverte estoque + atualiza Pedido para CANCELADO
+            API-->>Cliente: 201 Created (status CANCELADO, pagamentoResultado RECUSADO)
+        end
+    end

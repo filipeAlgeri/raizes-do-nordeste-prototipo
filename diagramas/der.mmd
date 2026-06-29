@@ -1,0 +1,68 @@
+erDiagram
+    UNIDADE {
+        int id PK
+        string nome
+        string cnpj
+        string cidade
+        string estado
+        boolean ativa
+    }
+    COLABORADOR {
+        int id PK
+        int unidadeId FK
+        string nome
+        string email
+        string senhaHash
+        string perfil
+        boolean ativo
+    }
+    CLIENTE {
+        int id PK
+        string nome
+        string email
+        string cpf
+        string senhaHash
+        boolean aceiteLgpd
+    }
+    PRODUTO {
+        int id PK
+        int unidadeId FK
+        string nome
+        string categoria
+        decimal preco
+        int estoqueAtual
+        boolean disponivel
+    }
+    PEDIDO {
+        int id PK
+        int unidadeId FK
+        int clienteId FK
+        string canalPedido
+        string status
+        decimal total
+        string formaPagamento
+        boolean anonimo
+    }
+    ITEM_PEDIDO {
+        int id PK
+        int pedidoId FK
+        int produtoId FK
+        int quantidade
+        decimal precoUnitario
+    }
+    PAGAMENTO {
+        int id PK
+        int pedidoId FK
+        string forma
+        decimal valor
+        string status
+        string transacaoId
+    }
+
+    UNIDADE ||--o{ COLABORADOR : emprega
+    UNIDADE ||--o{ PRODUTO : oferece
+    UNIDADE ||--o{ PEDIDO : recebe
+    CLIENTE ||--o{ PEDIDO : realiza
+    PEDIDO ||--|{ ITEM_PEDIDO : contem
+    PRODUTO ||--o{ ITEM_PEDIDO : referenciado_em
+    PEDIDO ||--|| PAGAMENTO : gera

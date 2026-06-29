@@ -1,0 +1,35 @@
+flowchart LR
+    Cliente(["fa:fa-user Cliente"])
+    Atendente(["fa:fa-user Atendente/Cozinha"])
+    Gerente(["fa:fa-user Gerente"])
+    Gateway(["fa:fa-globe Gateway de Pagamento (mock)"])
+
+    subgraph ClienteUC[ ]
+        UC1(Fazer login / cadastro)
+        UC2(Consultar cardápio da unidade)
+        UC3(Realizar pedido)
+        UC4(Acompanhar status do pedido)
+    end
+
+    subgraph OperacaoUC[ ]
+        UC5(Atualizar status do pedido)
+    end
+
+    subgraph SistemaUC[ ]
+        UC6(Processar pagamento mock)
+    end
+
+    Cliente --> UC1
+    Cliente --> UC2
+    Cliente --> UC3
+    Cliente --> UC4
+
+    Atendente --> UC5
+    Gerente --> UC5
+
+    UC3 -.include.-> UC6
+    UC6 --- Gateway
+
+    style ClienteUC fill:#ffffff,stroke:#ffffff
+    style OperacaoUC fill:#ffffff,stroke:#ffffff
+    style SistemaUC fill:#ffffff,stroke:#ffffff

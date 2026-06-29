@@ -1,0 +1,75 @@
+classDiagram
+    class Unidade {
+        +int id
+        +string nome
+        +string cnpj
+        +string cidade
+        +string estado
+        +boolean ativa
+        +listarProdutos()
+        +listarPedidos()
+    }
+
+    class Colaborador {
+        +int id
+        +string nome
+        +string email
+        +PerfilColaborador perfil
+        +boolean ativo
+        +autenticar()
+    }
+
+    class Cliente {
+        +int id
+        +string nome
+        +string email
+        +string cpf
+        +boolean aceiteLgpd
+        +autenticar()
+        +realizarPedido()
+    }
+
+    class Produto {
+        +int id
+        +string nome
+        +CategoriaProduto categoria
+        +decimal preco
+        +int estoqueAtual
+        +boolean disponivel
+        +temEstoque(qtd) bool
+    }
+
+    class Pedido {
+        +int id
+        +CanalPedido canalPedido
+        +StatusPedido status
+        +decimal total
+        +FormaPagamento formaPagamento
+        +boolean anonimo
+        +calcularTotal() decimal
+        +atualizarStatus(novoStatus)
+    }
+
+    class ItemPedido {
+        +int id
+        +int quantidade
+        +decimal precoUnitario
+        +subtotal() decimal
+    }
+
+    class Pagamento {
+        +int id
+        +FormaPagamento forma
+        +decimal valor
+        +StatusPagamento status
+        +string transacaoId
+        +processar() StatusPagamento
+    }
+
+    Unidade "1" --> "0..*" Colaborador : emprega
+    Unidade "1" --> "0..*" Produto : oferece
+    Unidade "1" --> "0..*" Pedido : recebe
+    Cliente "0..1" --> "0..*" Pedido : realiza
+    Pedido "1" --> "1..*" ItemPedido : contem
+    Produto "1" --> "0..*" ItemPedido : referenciado em
+    Pedido "1" --> "1" Pagamento : gera
